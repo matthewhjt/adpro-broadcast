@@ -46,3 +46,41 @@ let (mut ws_stream, _) = ClientBuilder::from_uri(Uri::from_static("ws://127.0.0.
         .connect()
         .await?;
 ```
+
+## 2.3
+
+![alt text](2.3.1.png)
+
+![alt text](2.3.2.png)
+
+![alt text](2.3.3.png)
+
+![alt text](2.3.4.png)
+
+To add some information about the IP of the client, we simply pass not just the text sent by the client, but also the client's IP.
+
+So, in server.rs instead of 
+
+```
+if let Some(text) = msg.as_text() {
+        println!("From client {addr:?} {text:?}");
+        bcast_tx.send(text.into())?;
+}
+```
+
+it becomes 
+
+```
+if let Some(text) = msg.as_text() {
+        println!("From client {addr:?} {text:?}");
+        bcast_tx.send(format!("{addr} : {text}"))?;
+}
+```
+
+And to add `Matt's Computer -` on each message we simply add it on client.rs
+
+```
+if let Some(text) = msg.as_text() {
+    println!("Matt's Computer - From server: {}", text);
+}
+``` 
